@@ -10,10 +10,16 @@ import javax.ws.rs.core.Response;
 public class PingResource {
     
     @GET
-    public Response ping() {
-
+    @Path("register")
+    public Response register() {
         System.out.println(ResteasyProviderFactory.getInstance());
-        
+        ResteasyProviderFactory.getInstance().registerProvider(DummyContainerRequestFilter.class);
+
+        return Response.ok("provider registered").build();
+    }
+    
+    @GET
+    public Response ping() {        
         return Response.ok("Application deployed successfully").build();
     }
 }
