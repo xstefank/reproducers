@@ -8,6 +8,8 @@ import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -39,5 +41,33 @@ public class PingResource {
         Assert.assertEquals(lraId, lraClient.getCurrent());
         
         ...
+    }
+    
+    
+    @LRA(LRA.Type.REQUIRES_NEW)
+    public Response whatever(@HeaderParam(LRAClient.LRA_HTTP_HEADER) String lraIdURL) throws MalformedURLException {
+        URL outerManagedLRAId = new URL(lraIdURL);
+        URL id1 = lraClient.startLRA(null, "id1", 0L, ChronoUnit.SECONDS);
+        URL id2 = lraClient.startLRA(null, "id1", 0L, ChronoUnit.SECONDS);
+        URL id3 = lraClient.startLRA(null, "id1", 0L, ChronoUnit.SECONDS);
+
+        ...
+        
+        makeBusinessRESTCall(id1);
+
+        ...
+        
+        makeAnotherBusinessCall(id3);
+   
+        ...
+        
+        makeAnotherBusinessCall2(id2);
+        
+        ...
+    }
+    
+    public void method() {
+        ClientBuilder.newClient().target("adsafsafd").request()
+                .header(LRAClient.LRA_HTTP_HEADER, lraId);
     }
 }
