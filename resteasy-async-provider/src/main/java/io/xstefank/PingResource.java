@@ -7,6 +7,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.logging.Logger;
 
 @Path("ping")
 public class PingResource {
@@ -14,6 +15,7 @@ public class PingResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public CompletionStage<Integer> ping() {
+        Logger.getAnonymousLogger().severe(Thread.currentThread().getName());
         return CompletableFuture.supplyAsync(() -> 42);
     }
 }
